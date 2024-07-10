@@ -1,0 +1,22 @@
+<div class="modal-header">
+  <h5 class="modal-title">Your Cart</h5>
+</div>
+<div class="modal-body">
+  @if(totalItems === 0){
+  <div>
+    <p>Your cart is empty.</p>
+  </div>
+  }
+  @else{
+    @for(item of cartService.cartItems$ | async; track item.id){
+      <app-cart-item [item]="item" (updateQuantityEvent)="updateQuantity($event.productId, $event.quantity)"
+        (removeFromCartEvent)="removeFromCart($event)" />
+  }
+  <hr>
+  <h5>Total: {{ formatPrice(getTotalPrice()) }}</h5>
+  }
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="activeModal.close()">Close</button>
+  <button type="button" class="btn btn-primary" [disabled]="totalItems === 0" (click)="checkout()">Checkout</button>
+</div>

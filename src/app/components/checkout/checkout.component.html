@@ -1,0 +1,55 @@
+<div class="container">
+  <h2>Checkout</h2>
+  <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" id="name" formControlName="name" class="form-control">
+      @if(checkoutForm.get('name').invalid && checkoutForm.get('name').touched){
+      <div class="text-danger">
+        Name is required and should only contain letters.
+      </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="address">Address</label>
+      <input type="text" id="address" formControlName="address" class="form-control">
+      @if(checkoutForm.get('address').invalid && checkoutForm.get('address').touched){
+      <div class="text-danger">
+        Address is required.
+      </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" formControlName="email" class="form-control">
+      @if(checkoutForm.get('email').invalid && checkoutForm.get('email').touched){
+      <div class="text-danger">
+        Enter a valid email.
+      </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone</label>
+      <input type="text" id="phone" formControlName="phone" class="form-control">
+      @if(checkoutForm.get('phone').invalid && checkoutForm.get('phone').touched){
+      <div class="text-danger">
+        Phone number is required and should only contain "+" and numbers.
+      </div>
+      }
+    </div>
+
+    @if(totalItems > 0) {
+    <h3>Items in Cart</h3><br>
+      @for(item of cartService.cartItems$ | async; track item.id){
+        <app-cart-item [item]="item" (updateQuantityEvent)="updateQuantity($event.productId, $event.quantity)"
+        (removeFromCartEvent)="removeFromCart($event)" />
+      }
+    }
+
+    <button type="submit" class="btn btn-primary" [disabled]="checkoutForm.invalid"
+      (click)="submitForm()">Submit</button>
+  </form>
+</div>
