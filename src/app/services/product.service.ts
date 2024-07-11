@@ -34,23 +34,10 @@ export class ProductService {
     );
   }
 
-  private transformToProductModel(product: any): Product {
-    return {
-      id: product.id,
-      title: product.title,
-      price: product.price,
-      stock: product.stock,
-      thumbnail: product.thumbnail
-    };
-  }
-
   private transformToProductWithDetailsModel(product: any): ProductWithDetails {
+    const productModel = this.transformToProductModel(product);
     return {
-      id: product.id,
-      title: product.title,
-      price: product.price,
-      stock: product.stock,
-      thumbnail: product.thumbnail,
+      ...productModel,
       description: product.description,
       category: product.category,
       brand: product.brand,
@@ -58,13 +45,23 @@ export class ProductService {
       dimensions: {
         width: product.dimensions.width,
         height: product.dimensions.height,
-        depth: product.dimensions.depth
+        depth: product.dimensions.depth,
       },
       weight: product.weight,
       warrantyInformation: product.warrantyInformation,
       shippingInformation: product.shippingInformation,
       availabilityStatus: product.availabilityStatus,
-      returnPolicy: product.returnPolicy
+      returnPolicy: product.returnPolicy,
+    };
+  }
+
+  private transformToProductModel(product: any): Product {
+    return {
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      stock: product.stock,
+      thumbnail: product.thumbnail,
     };
   }
 }
