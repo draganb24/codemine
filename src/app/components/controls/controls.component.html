@@ -1,0 +1,13 @@
+<div class="controls">
+  <div class="search-container">
+    <input type="text" [(ngModel)]="searchText" (input)="filterProducts()" placeholder="Search for products...">
+  </div>
+  <div class="dropdown-container">
+    <label for="pageSizeSelect">Results per page:</label>
+    <select id="pageSizeSelect" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+      @for(size of pageSizes; track size){
+      <option  [value]="size">{{ size }}</option>
+      }
+    </select>
+  </div>
+</div>

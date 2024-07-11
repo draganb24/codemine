@@ -1,0 +1,21 @@
+<app-controls (searchTextChange)="onSearchTextChange($event)" (pageSizeChange)="onPageSizeChange($event)" />
+
+@for(product of filteredProducts; track product.id) {
+<div class="product">
+  @defer {
+  <div (click)="openProductWithDetailsModal(product.id)">
+    <h3>{{ product.title }}</h3>
+    <img [src]="product.thumbnail" alt="{{ product.title }}">
+    <p>Price: {{ formatPrice(product.price) }}</p>
+    <p>Stock: {{ product.stock }}</p>
+  </div>
+  }
+  <div class="checkout-buttons">
+    <button (click)="addToCheckout(product)" [disabled]="product.stock <= 0">Add to checkout</button>
+    <button (click)="removeFromCheckout(product)" [disabled]="product.stock >= 100">Remove from checkout</button>
+  </div>
+</div>
+}
+
+<ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
+  (pageChange)="onPageChange()"></ngb-pagination>

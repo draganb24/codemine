@@ -1,0 +1,34 @@
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  background-color: gray;
+  padding: 10px;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-container input {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.dropdown-container {
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-container label {
+  margin-right: 10px;
+}
+
+.dropdown-container select {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}

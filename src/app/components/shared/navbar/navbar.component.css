@@ -1,0 +1,42 @@
+/* Navbar Container */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Align items to the right */
+  background-color: #343a40;
+  padding: 10px 20px;
+}
+
+/* Navbar Button */
+.header .btn {
+  display: flex;
+  align-items: center;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Icon inside Button */
+.header .btn i {
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+/* Badge */
+.header .btn .badge {
+  background-color: #6c757d;
+  color: white;
+  margin-left: 10px;
+  padding: 5px 10px;
+  font-size: 14px;
+  border-radius: 10px;
+}
+
+/* Button Hover Effect */
+.header .btn:hover {
+  background-color: #0056b3;
+}

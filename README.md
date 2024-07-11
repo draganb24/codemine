@@ -5,13 +5,13 @@ Node.js: Make sure you have Node.js installed. You can download it from nodejs.o
 Angular CLI: Install Angular CLI globally if you haven't already. You can install it using npm:
 npm install -g @angular/cli
 
-Clone the repository using the following command:
-
-git clone https://github.com/draganb24/codemin.git
-
 Navigate to the Project Directory: Change to the project directory:
 
 cd your-angular-project
+
+Clone the repository using the following command:
+
+git clone https://github.com/draganb24/codemine.git
 
 Run the following command to install all the necessary dependencies specified in the package.json file:
 

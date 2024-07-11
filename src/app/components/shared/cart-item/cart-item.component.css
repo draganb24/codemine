@@ -1,0 +1,81 @@
+/* cart-items.component.css */
+
+.d-flex {
+  display: flex;
+  align-items: center;
+}
+
+.mb-3 {
+  margin-bottom: 1rem;
+}
+
+.img-thumbnail {
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.ms-3 {
+  margin-left: 1rem;
+}
+
+h6 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.d-flex.align-items-center {
+  display: flex;
+  align-items: center;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 30px;
+  height: 30px;
+}
+
+.btn-secondary:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.form-control {
+  width: 50px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.mx-2 {
+  margin: 0 0.5rem;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
