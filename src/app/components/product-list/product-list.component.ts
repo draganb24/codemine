@@ -37,10 +37,22 @@ export class ProductListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initializePagination();
+    this.initializeSearch();
+  }
+
+  initializePagination(): void {
     this.route.queryParams.subscribe(params => {
       this.page = +params['skip'] || 1;
       this.pageSize = +params['limit'] || 5;
       this.fetchProducts();
+    });
+  }
+
+  initializeSearch(): void {
+    this.productService.getSearchedProducts().subscribe(data => {
+      this.filteredProducts = data;
+      this.collectionSize = data.length;
     });
   }
 
@@ -55,16 +67,11 @@ export class ProductListComponent implements OnInit {
 
   onSearchTextChange(searchText: string): void {
     this.searchText = searchText;
-    this.filterProducts();
+    this.productService.searchProducts(searchText);
   }
 
   filterProducts(): void {
-    if (this.searchText.trim()) {
-      this.productService.searchProducts(this.searchText).subscribe((data) => {
-        this.filteredProducts = data;
-        this.collectionSize = data.length;
-      });
-    } else {
+    if (!this.searchText.trim()) {
       this.filteredProducts = this.products;
       this.collectionSize = this.products.length;
     }
