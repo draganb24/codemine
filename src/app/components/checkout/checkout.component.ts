@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CartService } from '../../services/cart.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CartItemComponent } from '../shared/cart-item/cart-item.component';
-import { Subscription, tap } from 'rxjs';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-checkout',
@@ -15,9 +15,7 @@ import { Subscription, tap } from 'rxjs';
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
 })
-export class CheckoutComponent {
-  totalItems: number = 0;
-  private subscription: Subscription;
+export class CheckoutComponent implements OnInit {
   checkoutForm: FormGroup;
 
   constructor(
@@ -28,14 +26,7 @@ export class CheckoutComponent {
   ) { }
 
   ngOnInit(): void {
-    this.initializeCartSubscription();
     this.initializeCheckoutForm();
-  }
-
-  private initializeCartSubscription(): void {
-    this.subscription = this.cartService.cartItems$.subscribe(cartItems => {
-      this.totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-    });
   }
 
   private initializeCheckoutForm(): void {
