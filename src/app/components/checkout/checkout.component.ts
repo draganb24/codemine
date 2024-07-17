@@ -5,7 +5,6 @@ import { CartService } from '../../services/cart.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { PriceService } from '../../services/price.service';
 import { CartItemComponent } from '../shared/cart-item/cart-item.component';
 import { Subscription, tap } from 'rxjs';
 
@@ -25,7 +24,6 @@ export class CheckoutComponent {
     private fb: FormBuilder,
     public cartService: CartService,
     private http: HttpClient,
-    private priceService: PriceService,
     private router: Router
   ) { }
 
@@ -72,10 +70,6 @@ export class CheckoutComponent {
 
   removeFromCart(productId: number): void {
     this.cartService.removeFromCart(productId);
-  }
-
-  formatPrice(price: number): string {
-    return this.priceService.formatPrice(price);
   }
 
   submitForm() {

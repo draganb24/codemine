@@ -4,7 +4,6 @@ import { CartService } from '../../services/cart.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { PriceService } from '../../services/price.service';
 import { Subscription } from 'rxjs';
 import { CartItemComponent } from '../shared/cart-item/cart-item.component';
 
@@ -22,7 +21,6 @@ export class CartComponent implements OnInit, OnDestroy {
   constructor(
     public activeModal: NgbActiveModal,
     public cartService: CartService,
-    private priceService: PriceService,
     private router: Router
   ) {}
 
@@ -61,9 +59,5 @@ export class CartComponent implements OnInit, OnDestroy {
   checkout(): void {
     this.activeModal.close();
     this.router.navigate(['/checkout']);
-  }
-
-  formatPrice(price: number): string {
-    return this.priceService.formatPrice(price);
   }
 }

@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
-import { PriceService } from '../../services/price.service';
 import { SpinnerComponent } from '../shared/spinner/spinner.component';
 import { tap, catchError, of, finalize } from 'rxjs';
 
@@ -21,7 +20,6 @@ export class ProductDetailComponent {
   constructor(
     public activeModal: NgbActiveModal,
     private productService: ProductService,
-    private priceService: PriceService,
   ) { }
 
   ngOnInit(): void {
@@ -42,9 +40,5 @@ export class ProductDetailComponent {
         this.loading = false;
       })
     ).subscribe();
-  }
-
-  formatPrice(price: number): string {
-    return this.priceService.formatPrice(price);
   }
 }

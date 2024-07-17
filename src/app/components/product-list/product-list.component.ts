@@ -8,7 +8,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProductDetailComponent } from '../product-detail/product-detail.component';
 import { CartService } from '../../services/cart.service';
 import { Product } from '../../interfaces/product.model';
-import { PriceService } from '../../services/price.service';
 import { ControlsComponent } from '../controls/controls.component';
 
 @Component({
@@ -31,7 +30,6 @@ export class ProductListComponent implements OnInit {
     private cartService: CartService,
     private route: ActivatedRoute,
     private modalService: NgbModal,
-    private priceService: PriceService,
     config: NgbPaginationConfig
   ) {
     config.pageSize = this.pageSize;
@@ -80,10 +78,6 @@ export class ProductListComponent implements OnInit {
     this.pageSize = pageSize;
     this.page = 1;
     this.fetchProducts();
-  }
-
-  formatPrice(price: number): string {
-    return this.priceService.formatPrice(price);
   }
 
   addToCheckout(product: Product) {
