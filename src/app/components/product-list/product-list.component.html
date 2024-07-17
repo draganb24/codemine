@@ -12,7 +12,7 @@
   }
   <div class="checkout-buttons">
     <button (click)="addToCheckout(product)" [disabled]="product.stock <= 0">Add to checkout</button>
-    <button (click)="removeFromCheckout(product)" [disabled]="product.stock >= 100">Remove from checkout</button>
+    <button (click)="removeFromCheckout(product)">Remove from checkout</button>
   </div>
 </div>
 }

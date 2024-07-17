@@ -9,7 +9,7 @@ export class CartService {
   cartItems$ = this.cartItemsSubject.asObservable();
   totalItems = 0;
 
-  constructor() {}
+  constructor() { }
 
   addToCart(product: any, quantity: number = 1): void {
     const currentItems = this.cartItemsSubject.value;
@@ -33,15 +33,17 @@ export class CartService {
     const currentItems = this.cartItemsSubject.value;
     const item = currentItems.find(item => item.product.id === productId);
 
-    if (item) {
+    if (item && item.product.stock > 0) {
+      item.product.stock -= (quantity - item.quantity);
       item.quantity = quantity;
+
       this.updateCartItems(currentItems);
     }
   }
 
   private updateCartItems(items: any[]): void {
     this.cartItemsSubject.next(items);
-    this.totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+    this.totalItems = items.reduce((sum, { quantity }) => sum + quantity, 0);
   }
 
   getTotalPrice(): number {
