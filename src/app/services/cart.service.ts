@@ -7,7 +7,6 @@ import { BehaviorSubject } from 'rxjs';
 export class CartService {
   private cartItemsSubject = new BehaviorSubject<any[]>([]);
   cartItems$ = this.cartItemsSubject.asObservable();
-  totalItems = 0;
 
   constructor() { }
 
@@ -43,7 +42,6 @@ export class CartService {
 
   private updateCartItems(items: any[]): void {
     this.cartItemsSubject.next(items);
-    this.totalItems = items.reduce((sum, { quantity }) => sum + quantity, 0);
   }
 
   getTotalPrice(): number {

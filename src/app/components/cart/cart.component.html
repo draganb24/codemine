@@ -2,21 +2,21 @@
   <h5 class="modal-title">Your Cart</h5>
 </div>
 <div class="modal-body">
-  @if(totalItems === 0){
-  <div>
-    <p>Your cart is empty.</p>
-  </div>
+  @if((cartService.cartItems$ | async).length === 0){
+    <div>
+      <p>Your cart is empty.</p>
+    </div>
   }
   @else{
-    @for(item of cartService.cartItems$ | async; track item.id){
+    @for(item of (cartService.cartItems$ | async); track item.id){
       <app-cart-item [item]="item" (updateQuantityEvent)="updateQuantity($event.productId, $event.quantity)"
         (removeFromCartEvent)="removeFromCart($event)" />
-  }
-  <hr>
-  <h5>Total: {{ getTotalPrice() | currency:'EUR' }}</h5>
+    }
+    <hr>
+    <h5>Total: {{ getTotalPrice() | currency:'EUR' }}</h5>
   }
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-secondary" (click)="activeModal.close()">Close</button>
-  <button type="button" class="btn btn-primary" [disabled]="totalItems === 0" (click)="checkout()">Checkout</button>
+  <button type="button" class="btn btn-primary" [disabled]="((cartService.cartItems$ | async).length === 0)" (click)="checkout()">Checkout</button>
 </div>
