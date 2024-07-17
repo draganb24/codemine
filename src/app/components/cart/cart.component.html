@@ -8,7 +8,7 @@
     </div>
   }
   @else{
-    @for(item of (cartService.cartItems$ | async); track item.id){
+    @for(item of (cartService.cartItems$ | async); track item.product.id){
       <app-cart-item [item]="item" (updateQuantityEvent)="updateQuantity($event.productId, $event.quantity)"
         (removeFromCartEvent)="removeFromCart($event)" />
     }
