@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { signal, Signal, WritableSignal } from '@angular/core';
 import { Product } from '../interfaces/product.model';
 import { CartItem } from '../interfaces/cart-item.model';
 
@@ -7,13 +7,18 @@ import { CartItem } from '../interfaces/cart-item.model';
   providedIn: 'root'
 })
 export class CartService {
-  private cartItemsSubject = new BehaviorSubject<CartItem[]>([]);
-  cartItems$ = this.cartItemsSubject.asObservable();
+  public cartItems: WritableSignal<CartItem[]>;
 
-  constructor() { }
+  constructor() {
+    this.cartItems = signal([]);
+  }
+
+  get cartItems$(): Signal<CartItem[]> {
+    return this.cartItems.asReadonly();
+  }
 
   addToCart(product: Product, quantity: number = 1): void {
-    const currentItems = this.cartItemsSubject.value;
+    const currentItems = this.cartItems();
     const existingItem = currentItems.find(item => item.product.id === product.id);
 
     if (existingItem) {
@@ -25,28 +30,36 @@ export class CartService {
     this.updateCartItems(currentItems);
   }
 
-  private updateCartItems(items: CartItem[]): void {
-    this.cartItemsSubject.next(items);
-  }
-
   removeFromCart(productId: number): void {
-    const currentItems = this.cartItemsSubject.value.filter(item => item.product.id !== productId);
+    const currentItems = this.cartItems().filter(item => item.product.id !== productId);
     this.updateCartItems(currentItems);
   }
 
   updateQuantity(productId: number, quantity: number): void {
-    const currentItems = this.cartItemsSubject.value;
+    const currentItems = this.cartItems();
     const item = currentItems.find(item => item.product.id === productId);
-      item.product.stock -= (quantity - item.quantity);
-      item.quantity = quantity;
-      this.updateCartItems(currentItems);
-  }
 
-  getTotalPrice(): number {
-    return this.cartItemsSubject.value.reduce((total, item) => total + item.product.price * item.quantity, 0);
+    if (item) {
+      const newStock = item.product.stock - (quantity - item.quantity);
+      if (newStock >= 0) {
+        item.product.stock = newStock;
+        item.quantity = quantity;
+        this.updateCartItems(currentItems);
+      } else {
+        console.error('Not enough stock available');
+      }
+    }
   }
 
   clearCart(): void {
     this.updateCartItems([]);
+  }
+
+  private updateCartItems(items: CartItem[]): void {
+    this.cartItems.set(items);
+  }
+
+  getTotalPrice(): number {
+    return this.cartItems().reduce((total, item) => total + item.product.price * item.quantity, 0);
   }
 }

@@ -1,35 +1,41 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, WritableSignal, effect } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CartService } from '../../services/cart.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CartItemComponent } from '../shared/cart-item/cart-item.component';
-import { tap } from 'rxjs';
 import { CartItem } from '../../interfaces/cart-item.model';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, FormsModule, CartItemComponent],
   templateUrl: './checkout.component.html',
-  styleUrl: './checkout.component.css'
+  styleUrls: ['./checkout.component.css']
 })
 export class CheckoutComponent implements OnInit {
   checkoutForm: FormGroup;
-  cartItems = signal<CartItem[]>([]);
+  cartItems: WritableSignal<CartItem[]>;
 
   constructor(
     private fb: FormBuilder,
     public cartService: CartService,
     private http: HttpClient,
     private router: Router
-  ) { }
+  ) {
+    this.cartItems = this.cartService.cartItems;
+
+    effect(() => {
+      const items = this.cartItems();
+      console.log('Cart items updated:', items);
+    });
+  }
 
   ngOnInit(): void {
     this.initializeCheckoutForm();
-    this.subscribeToCartItems();
   }
 
   private initializeCheckoutForm(): void {
@@ -38,12 +44,6 @@ export class CheckoutComponent implements OnInit {
       address: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required, Validators.pattern('^[+0-9]+$')]]
-    });
-  }
-
-  private subscribeToCartItems(): void {
-    this.cartService.cartItems$.subscribe(items => {
-      this.cartItems.set(items);
     });
   }
 

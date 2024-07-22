@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, effect, WritableSignal } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CartService } from '../../services/cart.service';
 import { FormsModule } from '@angular/forms';
@@ -15,22 +15,18 @@ import { CartItem } from '../../interfaces/cart-item.model';
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css']
 })
-export class CartComponent implements OnInit{
-  cartItems = signal<CartItem[]>([]);
+export class CartComponent {
+  cartItems: WritableSignal<CartItem[]>;
 
   constructor(
     public activeModal: NgbActiveModal,
     public cartService: CartService,
     private router: Router
-  ) {}
+  ) {
+    this.cartItems = this.cartService.cartItems;
 
-  ngOnInit(): void {
-    this.subscribeToCartItems();
-  }
-
-  private subscribeToCartItems(): void {
-    this.cartService.cartItems$.subscribe(items => {
-      this.cartItems.set(items);
+    effect(() => {
+      console.log('Cart items updated:', this.cartItems());
     });
   }
 
