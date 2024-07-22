@@ -33,17 +33,13 @@ export class CartItemComponent implements OnInit {
   updateQuantity(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     const newQuantity = Number(inputElement.value);
-
-    if (newQuantity <= this.item.product.stock) {
       this.quantity.set(newQuantity);
-    } else {
-      alert('Cannot add more than available stock');
-    }
   }
 
   increaseQuantity(): void {
     const currentQuantity = this.quantity();
-    if (currentQuantity < this.item.product.stock) {
+    const availableStock = this.item.product.stock;
+    if (availableStock > 0) {
       this.quantity.set(currentQuantity + 1);
     } else {
       alert('Cannot add more than available stock');

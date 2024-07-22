@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, effect, OnInit, signal } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { NgbModalModule, NgbPaginationConfig, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
@@ -34,6 +34,15 @@ export class ProductListComponent implements OnInit {
   ) {
     config.pageSize = this.pageSize();
     config.maxSize = 10;
+    effect(() => {
+      const products = this.productService.getSearchedProducts();
+      this.filteredProducts.set(products());
+      this.collectionSize.set(products().length);
+    },
+      {
+        allowSignalWrites: true
+      }
+    );
   }
 
   ngOnInit(): void {
@@ -49,12 +58,8 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-  initializeSearch(): void {
-    this.productService.getSearchedProducts().subscribe(data => {
-      this.filteredProducts.set(data);
-      this.collectionSize.set(data.length);
-    });
-
+  initializeSearch(query: string = ''): void {
+    this.productService.searchProducts(query);
   }
 
   fetchProducts(): void {
