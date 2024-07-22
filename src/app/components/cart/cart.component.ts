@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CartService } from '../../services/cart.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { CartItemComponent } from '../shared/cart-item/cart-item.component';
+import { Product } from '../../interfaces/product.model';
 
 @Component({
   selector: 'app-cart',
@@ -13,7 +14,8 @@ import { CartItemComponent } from '../shared/cart-item/cart-item.component';
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css']
 })
-export class CartComponent{
+export class CartComponent implements OnInit{
+  cartItems = signal<Product[]>([]);
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -21,7 +23,17 @@ export class CartComponent{
     private router: Router
   ) {}
 
-  addToCart(product: any, quantity: number = 1): void {
+  ngOnInit(): void {
+    this.subscribeToCartItems();
+  }
+
+  private subscribeToCartItems(): void {
+    this.cartService.cartItems$.subscribe(items => {
+      this.cartItems.set(items);
+    });
+  }
+
+  addToCart(product: Product, quantity: number = 1): void {
     this.cartService.addToCart(product, quantity);
   }
 

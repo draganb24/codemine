@@ -2,7 +2,7 @@
   <h5 class="modal-title">Your Cart</h5>
 </div>
 <div class="modal-body">
-    @for(item of (cartService.cartItems$ | async); track item.product.id){
+    @for(item of cartItems(); track item.id){
       <app-cart-item [item]="item" (updateQuantityEvent)="updateQuantity($event.productId, $event.quantity)"
         (removeFromCartEvent)="removeFromCart($event)" />
     }
@@ -16,5 +16,5 @@
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-secondary" (click)="activeModal.close()">Close</button>
-  <button type="button" class="btn btn-primary" [disabled]="((cartService.cartItems$ | async).length === 0)" (click)="checkout()">Checkout</button>
+  <button type="button" class="btn btn-primary" [disabled]="cartItems().length === 0" (click)="checkout()">Checkout</button>
 </div>
