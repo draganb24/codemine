@@ -2,7 +2,7 @@
   <h5 class="modal-title">Your Cart</h5>
 </div>
 <div class="modal-body">
-    @for(item of cartItems(); track item.id){
+    @for(item of cartItems(); track item){
       <app-cart-item [item]="item" (updateQuantityEvent)="updateQuantity($event.productId, $event.quantity)"
         (removeFromCartEvent)="removeFromCart($event)" />
     }

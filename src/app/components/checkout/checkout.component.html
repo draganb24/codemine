@@ -43,7 +43,7 @@
 
     @if(cartItems().length > 0) {
     <h3>Items in Cart</h3><br>
-      @for(item of cartItems(); track item.id){
+      @for(item of cartItems(); track item){
         <app-cart-item [item]="item" (updateQuantityEvent)="updateQuantity($event.productId, $event.quantity)"
         (removeFromCartEvent)="removeFromCart($event)" />
       }
