@@ -1,6 +1,7 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, signal, effect, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { CartItem } from '../../../interfaces/cart-item.model';
 
 @Component({
   selector: 'app-cart-item',
@@ -9,18 +10,54 @@ import { CommonModule } from '@angular/common';
   imports: [FormsModule, CommonModule],
   styleUrls: ['./cart-item.component.css']
 })
-export class CartItemComponent {
-  @Input() item: any;
-  @Output() updateQuantityEvent = new EventEmitter<{ productId: string, quantity: number }>();
+export class CartItemComponent implements OnInit {
+  @Input() item: CartItem;
+  @Output() updateQuantityEvent = new EventEmitter<{ productId: number, quantity: number }>();
   @Output() removeFromCartEvent = new EventEmitter<number>();
+  quantity: WritableSignal<number>;
+  setQuantity: (value: number) => void;
 
-  constructor() {}
+  constructor() {
+    this.quantity = signal(0);
 
-  updateQuantity(productId: string, quantity: number): void {
-    this.updateQuantityEvent.emit({ productId, quantity });
+    effect(() => {
+      const currentQuantity = this.quantity();
+      this.updateQuantityEvent.emit({ productId: this.item.product.id, quantity: currentQuantity });
+    });
   }
 
-  removeFromCart(productId: number): void {
-    this.removeFromCartEvent.emit(productId);
+  ngOnInit(): void {
+    this.quantity.set(this.item.quantity);
+  }
+
+  updateQuantity(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const newQuantity = Number(inputElement.value);
+
+    if (newQuantity <= this.item.product.stock) {
+      this.quantity.set(newQuantity);
+    } else {
+      alert('Cannot add more than available stock');
+    }
+  }
+
+  increaseQuantity(): void {
+    const currentQuantity = this.quantity();
+    if (currentQuantity < this.item.product.stock) {
+      this.quantity.set(currentQuantity + 1);
+    } else {
+      alert('Cannot add more than available stock');
+    }
+  }
+
+  decreaseQuantity(): void {
+    const currentQuantity = this.quantity();
+    if (currentQuantity > 1) {
+      this.quantity.set(currentQuantity - 1);
+    }
+  }
+
+  removeFromCart(): void {
+    this.removeFromCartEvent.emit(this.item.product.id);
   }
 }

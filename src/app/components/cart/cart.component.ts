@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { CartItemComponent } from '../shared/cart-item/cart-item.component';
 import { Product } from '../../interfaces/product.model';
+import { CartItem } from '../../interfaces/cart-item.model';
 
 @Component({
   selector: 'app-cart',
@@ -15,7 +16,7 @@ import { Product } from '../../interfaces/product.model';
   styleUrls: ['./cart.component.css']
 })
 export class CartComponent implements OnInit{
-  cartItems = signal<Product[]>([]);
+  cartItems = signal<CartItem[]>([]);
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -41,7 +42,7 @@ export class CartComponent implements OnInit{
     this.cartService.removeFromCart(productId);
   }
 
-  updateQuantity(productId: string, quantity: number): void {
+  updateQuantity(productId: number, quantity: number): void {
     this.cartService.updateQuantity(productId, quantity);
   }
 

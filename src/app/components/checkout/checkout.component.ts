@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CartItemComponent } from '../shared/cart-item/cart-item.component';
 import { tap } from 'rxjs';
-import { Product } from '../../interfaces/product.model';
+import { CartItem } from '../../interfaces/cart-item.model';
 
 @Component({
   selector: 'app-checkout',
@@ -18,7 +18,7 @@ import { Product } from '../../interfaces/product.model';
 })
 export class CheckoutComponent implements OnInit {
   checkoutForm: FormGroup;
-  cartItems = signal<Product[]>([]);
+  cartItems = signal<CartItem[]>([]);
 
   constructor(
     private fb: FormBuilder,
@@ -64,7 +64,7 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
-  updateQuantity(productId: string, quantity: number): void {
+  updateQuantity(productId: number, quantity: number): void {
     this.cartService.updateQuantity(productId, quantity);
   }
 

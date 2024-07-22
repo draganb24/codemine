@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { Product } from '../interfaces/product.model';
+import { CartItem } from '../interfaces/cart-item.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-  private cartItemsSubject = new BehaviorSubject<any[]>([]);
+  private cartItemsSubject = new BehaviorSubject<CartItem[]>([]);
   cartItems$ = this.cartItemsSubject.asObservable();
 
   constructor() { }
 
-  addToCart(product: any, quantity: number = 1): void {
+  addToCart(product: Product, quantity: number = 1): void {
     const currentItems = this.cartItemsSubject.value;
     const existingItem = currentItems.find(item => item.product.id === product.id);
 
@@ -23,25 +25,21 @@ export class CartService {
     this.updateCartItems(currentItems);
   }
 
+  private updateCartItems(items: CartItem[]): void {
+    this.cartItemsSubject.next(items);
+  }
+
   removeFromCart(productId: number): void {
     const currentItems = this.cartItemsSubject.value.filter(item => item.product.id !== productId);
     this.updateCartItems(currentItems);
   }
 
-  updateQuantity(productId: string, quantity: number): void {
+  updateQuantity(productId: number, quantity: number): void {
     const currentItems = this.cartItemsSubject.value;
     const item = currentItems.find(item => item.product.id === productId);
-
-    if (item && item.product.stock > 0) {
       item.product.stock -= (quantity - item.quantity);
       item.quantity = quantity;
-
       this.updateCartItems(currentItems);
-    }
-  }
-
-  private updateCartItems(items: any[]): void {
-    this.cartItemsSubject.next(items);
   }
 
   getTotalPrice(): number {
