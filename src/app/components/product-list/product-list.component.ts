@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { NgbModalModule, NgbPaginationConfig, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
@@ -18,12 +18,12 @@ import { ControlsComponent } from '../controls/controls.component';
   styleUrls: ['./product-list.component.css']
 })
 export class ProductListComponent implements OnInit {
-  products: Product[] = [];
-  filteredProducts: Product[] = [];
-  searchText: string = '';
-  page: number = 1;
-  pageSize: number = 5;
-  collectionSize: number = 0;
+  products = signal<Product[]>([]);
+  filteredProducts = signal<Product[]>([]);
+  searchText = signal<string>('');
+  page = signal<number>(1);
+  pageSize = signal<number>(5);
+  collectionSize = signal<number>(0);
 
   constructor(
     private productService: ProductService,
@@ -32,7 +32,7 @@ export class ProductListComponent implements OnInit {
     private modalService: NgbModal,
     config: NgbPaginationConfig
   ) {
-    config.pageSize = this.pageSize;
+    config.pageSize = this.pageSize();
     config.maxSize = 10;
   }
 
@@ -43,37 +43,38 @@ export class ProductListComponent implements OnInit {
 
   initializePagination(): void {
     this.route.queryParams.subscribe(params => {
-      this.page = +params['skip'] || 1;
-      this.pageSize = +params['limit'] || 5;
+      this.page.set(+params['skip'] || 1);
+      this.pageSize.set(+params['limit'] || 5);
       this.fetchProducts();
     });
   }
 
   initializeSearch(): void {
     this.productService.getSearchedProducts().subscribe(data => {
-      this.filteredProducts = data;
-      this.collectionSize = data.length;
+      this.filteredProducts.set(data);
+      this.collectionSize.set(data.length);
     });
+
   }
 
   fetchProducts(): void {
-    const skip = (this.page - 1) * this.pageSize;
-    this.productService.getProducts(this.pageSize, skip).subscribe((data) => {
-      this.products = data.products;
-      this.collectionSize = data.total;
-      this.filteredProducts = this.products;
+    const skip = (this.page() - 1) * this.pageSize();
+    this.productService.getProducts(this.pageSize(), skip).subscribe((data) => {
+      this.products.set(data.products);
+      this.collectionSize.set(data.total);
+      this.filteredProducts.set(data.products);
     });
   }
 
   onSearchTextChange(searchText: string): void {
-    this.searchText = searchText;
+    this.searchText.set(searchText);
     this.productService.searchProducts(searchText);
   }
 
   filterProducts(): void {
-    if (!this.searchText.trim()) {
-      this.filteredProducts = this.products;
-      this.collectionSize = this.products.length;
+    if (!this.searchText().trim()) {
+      this.filteredProducts.set(this.products());
+      this.collectionSize.set(this.products().length);
     }
   }
 
@@ -82,8 +83,8 @@ export class ProductListComponent implements OnInit {
   }
 
   onPageSizeChange(pageSize: number): void {
-    this.pageSize = pageSize;
-    this.page = 1;
+    this.pageSize.set(pageSize);
+    this.page.set(1);
     this.fetchProducts();
   }
 

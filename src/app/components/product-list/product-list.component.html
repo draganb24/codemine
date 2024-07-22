@@ -1,6 +1,6 @@
 <app-controls (searchTextChange)="onSearchTextChange($event)" (pageSizeChange)="onPageSizeChange($event)" />
 
-@for(product of filteredProducts; track product.id) {
+@for(product of filteredProducts(); track product.id) {
 <div class="product">
   @defer {
   <div (click)="openProductWithDetailsModal(product.id)">
@@ -17,5 +17,5 @@
 </div>
 }
 
-<ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
+<ngb-pagination [collectionSize]="collectionSize()" [(page)]="page" [pageSize]="pageSize()"
   (pageChange)="onPageChange()"></ngb-pagination>
