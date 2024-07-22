@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -9,18 +9,27 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./controls.component.css']
 })
 export class ControlsComponent {
-  searchText: string = '';
-  pageSize: number = 5;
+  searchText = signal<string>('');
+  pageSize = signal<number>(5);
+
   pageSizes: number[] = [5, 10, 20, 50];
 
   @Output() searchTextChange = new EventEmitter<string>();
   @Output() pageSizeChange = new EventEmitter<number>();
 
-  filterProducts(): void {
-    this.searchTextChange.emit(this.searchText);
+  onSearchTextChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.searchText.set(target.value);
+    this.filterProducts();
   }
 
-  onPageSizeChange(): void {
-    this.pageSizeChange.emit(this.pageSize);
+  filterProducts(): void {
+    this.searchTextChange.emit(this.searchText());
+  }
+
+  onPageSizeChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    this.pageSize.set(Number(target.value));
+    this.pageSizeChange.emit(this.pageSize());
   }
 }
