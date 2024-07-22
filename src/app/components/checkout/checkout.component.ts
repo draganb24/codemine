@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CartService } from '../../services/cart.service';
 import { CommonModule } from '@angular/common';
@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CartItemComponent } from '../shared/cart-item/cart-item.component';
 import { tap } from 'rxjs';
+import { Product } from '../../interfaces/product.model';
 
 @Component({
   selector: 'app-checkout',
@@ -17,6 +18,7 @@ import { tap } from 'rxjs';
 })
 export class CheckoutComponent implements OnInit {
   checkoutForm: FormGroup;
+  cartItems = signal<Product[]>([]);
 
   constructor(
     private fb: FormBuilder,
@@ -27,6 +29,7 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeCheckoutForm();
+    this.subscribeToCartItems();
   }
 
   private initializeCheckoutForm(): void {
@@ -38,9 +41,15 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
+  private subscribeToCartItems(): void {
+    this.cartService.cartItems$.subscribe(items => {
+      this.cartItems.set(items);
+    });
+  }
+
   onSubmit(): void {
-    if (this.checkoutForm?.valid) {
-      const formData = { ...this.checkoutForm?.value, items: this.cartService.cartItems$ };
+    if (this.checkoutForm.valid) {
+      const formData = { ...this.checkoutForm.value, items: this.cartItems() };
 
       this.http.post('https://dummyjson.com/http/200', formData).pipe(
         tap({

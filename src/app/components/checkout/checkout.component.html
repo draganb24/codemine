@@ -41,9 +41,9 @@
       }
     </div>
 
-    @if((cartService.cartItems$ | async).length > 0) {
+    @if(cartItems().length > 0) {
     <h3>Items in Cart</h3><br>
-      @for(item of cartService.cartItems$ | async; track item.product.id){
+      @for(item of cartItems(); track item.id){
         <app-cart-item [item]="item" (updateQuantityEvent)="updateQuantity($event.productId, $event.quantity)"
         (removeFromCartEvent)="removeFromCart($event)" />
       }
