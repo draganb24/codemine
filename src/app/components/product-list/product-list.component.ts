@@ -96,11 +96,13 @@ export class ProductListComponent implements OnInit {
   addToCheckout(product: Product) {
     this.cartService.addToCart(product);
     product.stock -= 1;
+    product.addedToCheckout = true;
   }
 
   removeFromCheckout(product: Product) {
     this.cartService.removeFromCart(product.id);
     product.stock += 1;
+    product.addedToCheckout = false;
   }
 
   openProductWithDetailsModal(productId: number): void {
